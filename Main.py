@@ -8,11 +8,11 @@ from tkinter import *
 #
 
 #시작 화면
+
 root = Tk()
 root.title("Miracle Morning")
 root.geometry("850x500") #창 화면크기
 root.resizable(False, False)
-
 
 mainTitle = Label(root) #메인 타이틀
 mainTitle.config(text="Miracle Morning", background="white")
@@ -40,14 +40,14 @@ userNameEnt.place(x=335, y=283)
 
 #생년월일 라벨
 birthYear = Label(root)
-birthYear.config(text="생년월일(6자리):", font=("함초롬바탕", 15), background='white')
+birthYear.config(text="생년월일(8자리):", font=("함초롬바탕", 15), background='white')
 birthYear.place(x=185, y=330)
 #생년월일 입력창
 birthYearEnt = Entry(root)
-birthYearEnt.insert(0, "000000") #디폴트 값
+birthYearEnt.insert(0, "00000000") #디폴트 값
 birthYearEnt.config(text="생년월일", font=("함초롬바탕", 15), background='white')
 def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 삭제시키는 함수
-    if birthYearEnt.get() == "000000":  # 초기값만 지울 수 있도록 한다
+    if birthYearEnt.get() == "00000000":  # 초기값만 지울 수 있도록 한다
         birthYearEnt.delete(0, len(birthYearEnt.get()))
 birthYearEnt.bind("<Button-1>", clear) #클릭했을때 clear함수 실행
 birthYearEnt.place(x=335, y=333)
@@ -56,11 +56,20 @@ birthYearEnt.place(x=335, y=333)
 loginBtn =Button(root)
 loginBtn.config(text="시작", font=("함초롬바탕", 15), background='white')
 loginBtn.place(x=415, y=380)
+
 def login():
+
     userName = userNameEnt.get()
     userBirthYear = birthYearEnt.get()
-    print(userName, userBirthYear)
-loginBtn.config(command=login)
+    # for widgets in root.place_slaves():  # 화면 창에 있는 place로 이루어진 위젯 삭제
+    #     widgets.destroy()
+    # for widgets in root.pack_slaves():
+    #     widgets.destroy()
+    return userName, userBirthYear
 
+loginBtn.config(command=login)
+a, b = login()
+print(a, b)
+# loginBtn.config(command=openMenuScreen)
 root.configure(background='white') #배경 색깔
 root.mainloop() #Tkinter 실행
