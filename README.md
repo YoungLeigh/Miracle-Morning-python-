@@ -1,2 +1,5 @@
 # Miracle-Morning-python-
-Morning routine program to become more productive in the morning
+
+Morning routine program to make your morning more productive.
+
+Made with Python
