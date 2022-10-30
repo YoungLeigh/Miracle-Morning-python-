@@ -110,7 +110,7 @@ def zodiac():#사용자의 생년월일 값을 바탕으로,'오늘의 운세'�
 routineStr = "" #루틴 한 줄로 표현
 routineList = [] #루틴 리스트
 timeList = [] #목표시간 리스트
-f = open("C:\\Users\\강민수\\Downloads\\Miracle-Morning-python--main\\루틴 저장 프로그램 구현\\강민수.txt", mode='r')
+f = open("강민수.txt", mode='r')
 lines = f.readlines()
 for line in lines:
     line = line.strip()
