@@ -68,8 +68,12 @@ birthYearEnt.place(x=335, y=333)
 
 defaultRoutines = ["물 한잔 마시기 = 01:00", "창문 열어서 환기하기 = 01:00", "스트레칭 해주기 = 01:30", "이불개기 = 02:00 "]
 
+routineStr = "" #루틴 한 줄로 표현
+routineList = [] #루틴 리스트
+timeList = [] #목표시간 리스트
+
 def login():#실행 시,생년월일 값이 8자리인지 확인 후, 이름 일치 팝업을 출력한다. 사용자가 확인을 누르면 인터페이스를 초기화하는 버튼
-    global userName
+    global userName, routineStr, routineList, timeList
     if len(birthYearEnt.get()) == 8:
         nameCheck = messagebox.askyesno(title='이름 확인', message=f"이름: {userNameEnt.get()}\n맞습니까?")
         if nameCheck:
@@ -82,6 +86,18 @@ def login():#실행 시,생년월일 값이 8자리인지 확인 후, 이름 일
                 userFile.close()
             else:
                 pass  # 파일이 존재하면 아무것도 하지 않음.(이건 그냥 표시용)
+            f = open(f"{userName}.txt", mode='r', encoding='utf-8')
+            lines = f.readlines()
+            for line in lines:
+                line = line.strip()
+                userRoutine, userTime = line.split('=')
+                routineList.append(userRoutine)
+                timeList.append(userTime)
+                if line == lines[-1]:
+                    routineStr = routineStr + userRoutine
+                    break
+                routineStr = routineStr + userRoutine + " → "
+            f.close()
             menuPage_recall()
     else:
         messagebox.showerror("Error", "8자리 생년월일을 입력해주십시오.")
@@ -126,70 +142,102 @@ def zodiac():#사용자의 생년월일 값을 바탕으로,'오늘의 운세'�
     userZodiac = zodiacList[zodiacBirth]
     return txt, userZodiac
 
-routineStr = "" #루틴 한 줄로 표현
-routineList = [] #루틴 리스트
-timeList = [] #목표시간 리스트
-f = open("강민수.txt", mode='r', encoding='utf-8')
-lines = f.readlines()
-for line in lines:
-    line = line.strip()
-    userRoutine, userTime = line.split('=')
-    routineList.append(userRoutine)
-    timeList.append(userTime)
-    if line == lines[-1]:
-        routineStr = routineStr + userRoutine
-        break
-    routineStr = routineStr + userRoutine + " → "
-f.close()
+
+
+
+total_elasped_time = 0
+total_goal_time = 0
 
 def num1(): #'루틴 실행' 버튼 클릭 시 실행, 대기화면을 출력한다.
     reset()
 
-    def RoutineStart():  # 루틴 실행 화면을 출력한다.
-        reset()
+    def RoutineStart():
 
         def RoutineRecursion(i):
-            # def RoutineResult():
-            #     reset()
-            #     recallBtn = Button(root)
-            #     recallBtn.config(text="확인", command=menuPage_recall, font=("함초롬바탕", 15), background='white')
-            #     recallBtn.place(x=415, y=380)
+            global total_elasped_time, total_goal_time, routineList
+            reset()
 
-            if i > len(routineList):
-                RoutineResult()
+            if i == len(routineList):
+                routineResultLab = Label(root, text='모닝루틴 실행 결과', font=("함초롬바탕", 30), background='white', foreground="black")
+                routineResultLab.pack(pady=10)
+
+                totalGoalMin, totalGoalSec = divmod(total_goal_time, 60)
+                totalGoalTimeLab = Label(root, text = f"총 목표시간 = {totalGoalMin:02d}:{totalGoalSec:02d}")
+                totalGoalTimeLab.config(font=("함초롬바탕", 20), background='white', foreground="black")
+                totalGoalTimeLab.pack(pady=10)
+
+                totalElaspedMin, totalElaspedSec = divmod(total_elasped_time, 60)
+                totalElaspedTimeLab = Label(root, text = f"총 경과시간 =  {totalElaspedMin:02d}:{totalElaspedSec:02d}")
+                totalElaspedTimeLab.config(font=("함초롬바탕", 20), background='white', foreground="black")
+                totalElaspedTimeLab.pack(pady=10)
+
+                if total_goal_time >= total_elasped_time:
+                    goodJobLab = Label(root, text="축하드립니다!\n오늘 하루 어떤 일이든 모두 해낼 수 있을 거예요!")
+                    goodJobLab.config(font=("함초롬바탕", 20), background='white', foreground="black")
+                    goodJobLab.pack(pady=15)
+                else:
+                    badJobLab = Label(root, text="시간을 조금 넘겼네요! 그래도 수고 많았습니다!\n남은 하루도 화이팅!")
+                    badJobLab.config(font=("함초롬바탕", 20), background='white', foreground="black")
+                    badJobLab.pack(pady=15)
+
+                recallBtn = Button(root)
+                recallBtn.config(text="확인", command=menuPage_recall, font=("함초롬바탕", 15), background='white', foreground="black")
+                recallBtn.pack(pady=20)
+                return
+
             else:
                 reset()
-                routionLab = Label(root)  # "루틴 실행" 타이틀
-                routionLab.config(text=routineList[i], background="white")
-                routionLab.config(font=("Times", 50))
-                routionLab.pack(anchor="w",pady=30)
 
-                nextRoutineButton = Button(root)
-                nextRoutineButton.config(text="다음", command=lambda:RoutineRecursion(i+1), font=("함초롬바탕", 15),
-                                         background='white')
-                nextRoutineButton.pack(side="top", pady=30)
+                routineLab = Label(root)  # "루틴 실행" 타이틀
+                routineLab.config(text=routineList[i], background="white", font=("Times", 50), foreground="black")
+                routineLab.pack(side="top", pady=30, fill=BOTH)
+
+                goalTimeLab = Label(root, font=("Helvetica", 30), text=f"목표시간 = {timeList[i]}", foreground="black")
+                goalTimeLab.pack()
+
+                elaspedTimeLab = Label(root, font=("Helvetica", 30), text="경과시간 = 00:00", foreground="black")
+                elaspedTimeLab.pack()
+
+                nextRoutineBtn = Button(root, text="다음", command=lambda: RoutineRecursion(i + 1), font=("함초롬바탕", 15), background='white', foreground="black")
+                nextRoutineBtn.pack(side="top", pady=30)
+
+
+                string_split = timeList[i].split(":")
+                goalMin = int(string_split[0])
+                goalSec = int(string_split[1])
+                currentGoalTime = (goalMin * 60) + goalSec
+                total_goal_time += currentGoalTime
+
+                current_seconds = 0
+
+                while True:
+                    current_seconds += 1
+                    total_elasped_time += 1
+                    minutes, seconds = divmod(current_seconds, 60)
+                    elaspedTimeLab.config(text=f"경과시간 =  {minutes:02d}:{seconds:02d}")
+                    root.update()
+                    time.sleep(1)
 
         RoutineRecursion(0)
 
 
     routinePrintTitle = Label(root)  # "루틴 실행" 타이틀
-    routinePrintTitle.config(text="루틴 실행", background="white")
-    routinePrintTitle.config(font=("Times", 30))
+    routinePrintTitle.config(text="루틴 실행", background="white", foreground="black")
+    routinePrintTitle.config(font=("함초롱바탕", 30))
     routinePrintTitle.pack(anchor="n")
 
     routinePrintSubTitle = Label(root)  # "루틴 실행" 부제목
-    routinePrintSubTitle.config(text="시작을 누르면 루틴이 시작됩니다! 설정된 루틴은 다음과 같습니다.", background="white")
-    routinePrintSubTitle.config(font=("함초롬바탕", 15))
+    routinePrintSubTitle.config(text="시작을 누르면 저장된 루틴이 시작됩니다! 설정된 루틴은 다음과 같습니다.", font=("함초롬바탕", 15))
+    routinePrintSubTitle.config(background="white", foreground="black")
     routinePrintSubTitle.pack(side="top", pady=30)
 
     routineIntroduction = Label(root)  # 루틴명만 모두 출력
-    routineIntroduction.config(text=routineStr, background="white", font=("함초롬바탕", 15))
+    routineIntroduction.config(text=routineStr, font=("함초롬바탕", 15), background="white", foreground="black")
     routineIntroduction.pack(side="top", pady=30)
 
     RoutineStartButton = Button(root)
-    RoutineStartButton.config(text="시작", command=RoutineStart, font=("함초롬바탕", 15), background='white')
+    RoutineStartButton.config(text="시작", command=RoutineStart, font=("함초롬바탕", 15), background='white', foreground="black")
     RoutineStartButton.pack(side="top", pady=30)
-
 
 def num2(): #'루틴 수정'버튼 클릭 시 실행되는 함수
     global inputText
