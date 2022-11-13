@@ -2,10 +2,10 @@ import time
 import os.path
 import tkinter
 import Motivation_Message
+import pygame
 from datetime import datetime
 from tkinter import *
 from tkinter import messagebox
-import English_Words
 
 #
 today_date = datetime.today().strftime("%Y/%m/%d") ## YYYY/mm/dd 형태의 날짜 출력
@@ -25,7 +25,7 @@ root.resizable(False, False) #창 화면 조정 금지
 mainTitle = Label(root) #메인 타이틀
 mainTitle.config(text="Miracle Morning", background="white", foreground="black")
 mainTitle.config(font=("Times", 50))
-mainTitle.pack(side="top", pady=30)
+mainTitle.place(x=190, y=30)
 
 subTitle = Label(root) #부제목
 subTitle.config(text="당신의 아침을 책임져줄 모닝루틴 프로그램", background="white", foreground="black")
@@ -37,7 +37,7 @@ userNameInput, birthYearInput = StringVar(), StringVar() #사용자 입력값을
 #이름 라벨
 userNameLab = Label(root)
 userNameLab.config(text="이름:", font=("함초롬바탕", 15), background='white', foreground="black")
-userNameLab.place(x=285, y=280)
+userNameLab.place(x=285, y=250)
 
 #이름 입력창
 userNameEnt = Entry(root, textvariable=userNameInput)
@@ -47,13 +47,13 @@ def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 �
     if userNameEnt.get() == "홍길동":  # 초기값만 지울 수 있도록 한다
         userNameEnt.delete(0, len(userNameEnt.get()))
 userNameEnt.bind("<Button-1>", clear) #클릭했을때 clear함수 실행
-userNameEnt.place(x=335, y=283)
+userNameEnt.place(x=335, y=250)
 
 
 #생년월일 라벨
 birthYear = Label(root)
 birthYear.config(text="생년월일(8자리):", font=("함초롬바탕", 15), background='white', foreground="black")
-birthYear.place(x=185, y=330)
+birthYear.place(x=185, y=300)
 
 #생년월일 입력창
 birthYearEnt = Entry(root, textvariable=birthYearInput)
@@ -64,9 +64,9 @@ def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 �
     if birthYearEnt.get() == "00000000":  # 초기값만 지울 수 있도록 한다
         birthYearEnt.delete(0, len(birthYearEnt.get()))
 birthYearEnt.bind("<Button-1>", clear) #클릭했을때 clear함수 실행
-birthYearEnt.place(x=335, y=333)
+birthYearEnt.place(x=335, y=303)
 
-defaultRoutines = ["물 한잔 마시기 = 01:00", "창문 열어서 환기하기 = 01:00", "스트레칭 해주기 = 01:30", "이불개기 = 02:00 "]
+defaultRoutines = ["물 한잔 마시기 = 01:00", "창문 열어서 환기하기 = 01:00", "스트레칭 해주기 = 01:30", "이불개기 = 02:00"]
 
 routineStr = "" #루틴 한 줄로 표현
 routineList = [] #루틴 리스트
@@ -88,12 +88,14 @@ def login():#실행 시,생년월일 값이 8자리인지 확인 후, 이름 일
                 pass  # 파일이 존재하면 아무것도 하지 않음.(이건 그냥 표시용)
             f = open(f"{userName}.txt", mode='r', encoding='utf-8')
             lines = f.readlines()
-            for line in lines:
+            n=0
+            for line in lines: #텍스트 파일 내용을 변수에 담기
                 line = line.strip()
                 userRoutine, userTime = line.split('=')
                 routineList.append(userRoutine)
                 timeList.append(userTime)
-                if line == lines[-1]:
+                n+=1
+                if n == len(lines): #마지막 루틴에는 화살표를 넣지 않음
                     routineStr = routineStr + userRoutine
                     break
                 routineStr = routineStr + userRoutine + " → "
@@ -105,7 +107,7 @@ def login():#실행 시,생년월일 값이 8자리인지 확인 후, 이름 일
 #시작 버튼
 loginBtn =Button(root)
 loginBtn.config(text="시작", command=login, font=("함초롬바탕", 15), background='white')
-loginBtn.place(x=415, y=380)
+loginBtn.place(x=415, y=350)
 
 #############################메뉴 화면 전환############################
 #TODO 사용가능한 전역변수: userNameInput.get(), birthYearInput.get()
@@ -217,7 +219,7 @@ def num1(): #'루틴 실행' 버튼 클릭 시 실행, 대기화면을 출력한
 
     routinePrintTitle = Label(root)  # "루틴 실행" 타이틀
     routinePrintTitle.config(text="루틴 실행", background="white", foreground="black")
-    routinePrintTitle.config(font=("함초롱바탕", 30))
+    routinePrintTitle.config(font=("함초롬바탕", 30))
     routinePrintTitle.pack(anchor="n")
 
     routinePrintSubTitle = Label(root)  # "루틴 실행" 부제목
@@ -239,10 +241,10 @@ def num2(): #'루틴 수정'버튼 클릭 시 실행되는 함수
     #'루틴 수정' title
     editTitle = Label(root)
     editTitle.config(text="루틴 수정", background="white", foreground="black")
-    editTitle.config(font=("함초롱바탕", 28))
+    editTitle.config(font=("함초롬바탕", 28))
     editTitle.pack(side="top", pady=20)
 
-    inputText = Text(root, width=60, height=20, font=("함초롱바탕", 10), background="white", foreground="black")
+    inputText = Text(root, width=60, height=20, font=("함초롬바탕", 10), background="white", foreground="black")
     file = open(f"{userName}.txt", mode='r', encoding='utf-8')
     lines = file.readlines()
     for line in lines: #text file내용을 textBox안에 담기
@@ -276,32 +278,73 @@ def get_text(): #유저가 수정한 텍스트를 텍스트파일에 다시 저�
 
 def Eng_words():#'오늘의 영단어'버튼 클릭 시 실행되는 함수
     reset() #창 초기화
-    userZodiacPhrase, userZodiac = eng_dic()
-    menu3Title = Label(root,text=f"오늘의 영단어: {word}", font=("Times", 40))
+    engWords = eng_dic()
+    menu3Title = Label(root,text=f"오늘의 영단어: {word}", font=("Times", 40), background='white', foreground="black")
     menu3Title.pack(side="top", pady=20)
-    menu3SubTitle = Label(root,text="영단어는 영어 뜻으로 외웠을 때 더 효과적이라고 한다. 오늘의 영단어를 외워보자.", font=("Times", 15))
+    menu3SubTitle = Label(root,text="영단어는 영어 뜻으로 외웠을 때 더 효과적이라고 합니다. 오늘의 영단어를 외워봅시다.",background='white', foreground="black",font=("함초롬바탕", 15))
     menu3SubTitle.pack(side="top", pady=20)
-    menu3Phrase = Label(root,text=userZodiacPhrase, font=("함초롱바탕",20), wraplength=600) #wraplength=int(),숫자만큼 줄이 차면 줄바꿈한다.
+    menu3Phrase = Label(root,text=engWords, font=("함초롬바탕",20), wraplength=600) #wraplength=int(),숫자만큼 줄이 차면 줄바꿈한다.
     menu3Phrase.pack(side="top", pady=30)
     recallBtn = Button(root)
     recallBtn.config(text="확인", font=("함초롬바탕",15), background='white', foreground="black", command=menuPage_recall)
-    recallBtn.place(x=390, y=380)
+    recallBtn.pack(side="top", pady=40)
 
-#TODO 디자인요소(폰트,글자크기,글자(배경)색 등등) 업그레이드.
 
 def num4():#'명상의 시간' 버튼 클릭 시 시행되는 함수
-    pass
+    reset()
+    pygame.mixer.init()
+    r = IntVar()
+    Title = Label(root)
+    Title.config(text="명상 음악", font=("함초롬바탕", 25), background="white", foreground="black")
+    Title.place(x=365, y=1)
+    def track1(): #음악 실행 함수
+        pygame.mixer.music.load("music/Track1.mp3")
+        pygame.mixer.music.play(loops=0)
+    def track2():
+        pygame.mixer.music.load("music/Track2.mp3")
+        pygame.mixer.music.play(loops=0)
+    def track3():
+        pygame.mixer.music.load("music/Track3.mp3")
+        pygame.mixer.music.play(loops=0)
+    def track4():
+        pygame.mixer.music.load("music/Track4.mp3")
+        pygame.mixer.music.play(loops=0)
+    def track5():
+        pygame.mixer.music.load("music/Track5.mp3")
+        pygame.mixer.music.play(loops=0)
+    def stop(): #음악 정지 함수
+        pygame.mixer.music.stop()
+    first = Radiobutton(root, font=("Helvetica", 13), width="10", height="3", text="Track-1", variable=r, value=1, command=track1,  foreground="black")
+    second = Radiobutton(root, font=("Helvetica", 13), width="10", height="3",  text="Track-2", variable=r, value=1, command=track2,  foreground="black")
+    third = Radiobutton(root, font=("Helvetica", 13), width="10", height="3", text="Track-3", variable=r, value=1, command=track3,  foreground="black")
+    fourth = Radiobutton(root, font=("Helvetica", 13), width="10", height="3", text="Track-4", variable=r, value=1, command=track4,  foreground="black")
+    fifth = Radiobutton(root, font=("Helvetica", 13), width="10", height="3", text="Track-5", variable=r, value=1, command=track5,  foreground="black")
+    first.place(x=380, y=60)
+    second.place(x=380, y=100)
+    third.place(x=380, y=140)
+    fourth.place(x=380, y=180)
+    fifth.place(x=380, y=220)
+    stopBtn = Button(root, font=("Helvetica", 13), text="Stop", command=stop, background='white', foreground="black")
+    stopBtn.place(x=420, y=310)
+    recallBtn = Button(root)
+    recallBtn.config(text="돌아가기", font=("함초롬바탕", 13), background='white', foreground="black", command=menuPage_recall)
+    recallBtn.place(x=405, y=360)
+    notice = Label(root)
+    notice.config(text="#루틴을 실행하며 음악을 듣고 싶다면 Stop 버튼을 누르지 않고 메인화면으로 돌아가면 됩니다. ", font=("함초롬바탕", 9), background="white", foreground="black")
+    notice.place(x=200, y=430)
+
+
 
 def num5():#'사용시 주의사항' 버튼 클릭 시 시행되는 함수
     reset()
     Title = Label(root)
     Title.config(text="사용시 주의사항", background="white", foreground="black")
-    Title.config(font=("함초롱바탕", 28))
+    Title.config(font=("함초롬바탕", 28))
     Title.pack(side="top", pady=20)
     text = Label(root)  # 루틴명만 모두 출력
     text.config(text="1. 루틴 실행시 뜨는 에러: 루틴 실행을 마치면 _tkinter.TclError: invalid command name 이라는 에러가 발생합니다. 해당 에러는 재귀함수를 강제 종료하며 발생하는 오류로 프로그램 실행에는 지장이 없으니 무시해도 됩니다."
                      "\n\n2. 루틴 수정 이후 적용이 안될 때: 루틴 수정을 마치면 프로그램을 종료하고 재실행해야 루틴 실행에서 수정한 내용이 적용됩니다."
-                     "\n\n3. 루틴 수정 시 규칙: 루틴 수정시 무조건 >>>루틴 내용 = 00(분):00(초)<<<의 구조로 저장하셔야 합니다.", font=("함초롬바탕", 12), background="white", foreground="black",wraplength=600)
+                     "\n\n3. 루틴 수정 시 규칙: 루틴 수정시 무조건 >>>루틴 내용 = 00(분):00(초)<<<의 구조로 저장하셔야 합니다.", font=("함초롬바탕", 13), background="white", foreground="black",wraplength=600)
     text.pack(side="top", pady=30)
     recallBtn = Button(root)
     recallBtn.config(text="확인", font=("함초롬바탕",15), background='white', foreground="black", command=menuPage_recall)
@@ -312,27 +355,27 @@ def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
     menuTitle = Label(root)  # 메뉴 타이틀
     menuTitle.config(text="메인 메뉴", background="white", foreground="black")
     menuTitle.config(font=("함초롱 바탕", 25))
-    menuTitle.place(x=325, y=20)
+    menuTitle.place(x=345, y=20)
 
     greetings = Label(root)
-    greetings.config(text="%s" %Motivation_Message.motivationMessage, font=("함초롱바탕, 10"), background="white", foreground="black", wraplength=400)
-    greetings.place(x=200, y=75)
+    greetings.config(text="%s" %Motivation_Message.motivationMessage, font=("함초롬바탕, 10"), background="white", foreground="black", wraplength=400)
+    greetings.place(x=225, y=75)
     # frameBox = Frame(root, relief='solid', bd=1, width=300, height=350) #단순 프레임(도형)이다.
     # frameBox.place(x=282, y=100)
 
-    menu1 = Button(root, text="루틴 실행", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num1)
-    menu2 = Button(root, text="루틴 수정", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num2)
-    menu3 = Button(root, text="오늘의 영단어", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=Eng_words)
-    menu4 = Button(root, text="명상의 시간", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num4)
-    menu5 = Button(root, text="사용시 주의사항", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num5)
-    menu6 = Button(root, text="종료", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=root.destroy)
+    menu1 = Button(root, text="루틴 실행", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num1)
+    menu2 = Button(root, text="루틴 수정", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num2)
+    menu3 = Button(root, text="오늘의 영단어", background="grey", font=("함초롬바탕,15"), width=25, height=1, command=Eng_words)
+    menu4 = Button(root, text="명상의 시간", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num4)
+    menu5 = Button(root, text="사용시 주의사항", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num5)
+    menu6 = Button(root, text="종료", background="grey", font=("함초롬바탕,15"), width=25, height=1, command=root.destroy)
 
-    menu1.place(x=282, y=130)
-    menu2.place(x=282, y=180)
-    menu3.place(x=282, y=230)
-    menu4.place(x=282, y=280)
-    menu5.place(x=282, y=330)
-    menu6.place(x=282, y=380)
+    menu1.place(x=302, y=130)
+    menu2.place(x=302, y=180)
+    menu3.place(x=302, y=230)
+    menu4.place(x=302, y=280)
+    menu5.place(x=302, y=330)
+    menu6.place(x=302, y=380)
 
 root.configure(background='white') #배경 색깔
 root.mainloop() #Tkinter 실행
