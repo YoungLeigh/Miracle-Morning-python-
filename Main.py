@@ -1,4 +1,8 @@
 import time
+import os.path
+import tkinter
+
+import Motivation_Message
 from datetime import datetime
 from tkinter import *
 from tkinter import messagebox
@@ -34,6 +38,7 @@ userNameInput, birthYearInput = StringVar(), StringVar() #사용자 입력값을
 userNameLab = Label(root)
 userNameLab.config(text="이름:", font=("함초롬바탕", 15), background='white', foreground="black")
 userNameLab.place(x=285, y=280)
+
 #이름 입력창
 userNameEnt = Entry(root, textvariable=userNameInput)
 userNameEnt.insert(0, "홍길동") #디폴트 값
@@ -44,10 +49,12 @@ def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 �
 userNameEnt.bind("<Button-1>", clear) #클릭했을때 clear함수 실행
 userNameEnt.place(x=335, y=283)
 
+
 #생년월일 라벨
 birthYear = Label(root)
 birthYear.config(text="생년월일(8자리):", font=("함초롬바탕", 15), background='white', foreground="black")
 birthYear.place(x=185, y=330)
+
 #생년월일 입력창
 birthYearEnt = Entry(root, textvariable=birthYearInput)
 birthYearEnt.insert(0, "00000000") #디폴트 값
@@ -59,11 +66,22 @@ def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 �
 birthYearEnt.bind("<Button-1>", clear) #클릭했을때 clear함수 실행
 birthYearEnt.place(x=335, y=333)
 
+defaultRoutines = ["물 한잔 마시기 = 01:00", "창문 열어서 환기하기 = 01:00", "스트레칭 해주기 = 01:30", "이불개기 = 02:00 "]
 
 def login():#실행 시,생년월일 값이 8자리인지 확인 후, 이름 일치 팝업을 출력한다. 사용자가 확인을 누르면 인터페이스를 초기화하는 버튼
+    global userName
     if len(birthYearEnt.get()) == 8:
         nameCheck = messagebox.askyesno(title='이름 확인', message=f"이름: {userNameEnt.get()}\n맞습니까?")
         if nameCheck:
+            userName = userNameEnt.get() #이름값 저장
+            path = f'{userNameEnt.get()}.txt'  # 해당 폴더 내에 유저 입력값으로 된 텍스트 파일 경로 생성(존재하지 않아도 경로는 생성가능. 존재유무 확인용)
+            if not os.path.isfile(path):  # 파일 존재 유무 확인
+                userFile = open(f"{userNameEnt.get()}.txt", "w", encoding="utf-8")  # 파일 존재하지 않으면 생성
+                for routine in defaultRoutines: #새로운 파일 생성 후 디폴트 루틴 리스트 추가
+                    userFile.write(f"{routine}\n")
+                userFile.close()
+            else:
+                pass  # 파일이 존재하면 아무것도 하지 않음.(이건 그냥 표시용)
             menuPage_recall()
     else:
         messagebox.showerror("Error", "8자리 생년월일을 입력해주십시오.")
@@ -124,23 +142,6 @@ for line in lines:
     routineStr = routineStr + userRoutine + " → "
 f.close()
 
-# def RoutineStart():  # 루틴 실행 화면을 출력한다.
-#     reset()
-#
-#     def RoutineRecursion(i):
-#         if i > len(routineList):
-#             return
-#         routionLab = Label(root)  # "루틴 실행" 타이틀
-#         routionLab.config(text=routineList[i], background="white")
-#         routionLab.config(font=("Times", 50))
-#         routionLab.pack(anchor="w")
-#
-#         nextRoutineButton = Button(root)
-#         nextRoutineButton.config(text="다음", command=RoutineRecursion(0), font=("함초롬바탕", 15), background='white')
-#         nextRoutineButton.pack(side="top", pady=30)
-#
-#     RoutineRecursion(0)
-
 def num1(): #'루틴 실행' 버튼 클릭 시 실행, 대기화면을 출력한다.
     reset()
 
@@ -191,7 +192,45 @@ def num1(): #'루틴 실행' 버튼 클릭 시 실행, 대기화면을 출력한
 
 
 def num2(): #'루틴 수정'버튼 클릭 시 실행되는 함수
-    pass
+    global inputText
+    reset()
+    #'루틴 수정' title
+    editTitle = Label(root)
+    editTitle.config(text="루틴 수정", background="white", foreground="black")
+    editTitle.config(font=("함초롱바탕", 28))
+    editTitle.pack(side="top", pady=20)
+
+    inputText = Text(root, width=60, height=20, font=("함초롱바탕", 10), background="white", foreground="black")
+    file = open(f"{userName}.txt", mode='r', encoding='utf-8')
+    lines = file.readlines()
+    for line in lines: #text file내용을 textBox안에 담기
+        inputText.insert(tkinter.CURRENT, f"{line}\n")
+    inputText.pack(pady=20)
+    file.close()
+    getTextBtn = Button(root, width="10", height="3", text="저장", command=get_text, background="white", foreground="black" )
+    getTextBtn.place(x=400, y=380)
+
+def get_text(): #유저가 수정한 텍스트를 텍스트파일에 다시 저장하는 함수
+    textEdit = inputText.get(1.0, END) #입력한 텍스트를 저장
+    editedText = textEdit.split("\n")
+    editedText = list(filter(None, editedText)) #빈 문자열 제거
+    userFile = open(f"{userName}.txt", "w", encoding="utf-8")
+    for routine in editedText:
+        userFile.write(f"{routine}\n")
+    userFile.close()
+    menuPage_recall()
+
+    # #'루틴 변경' button
+    # loginBtn = Button(root)
+    # loginBtn.config(text="루틴 변경", command="edit", font=("함초롬바탕", 15), background='white', foreground="black")
+    # loginBtn.pack(side="top", pady=50)
+    #
+    # #'루틴 추가' button
+    # loginBtn1 = Button(root)
+    # loginBtn1.config(text="루틴 추가", command="add", font=("함초롬바탕", 15), background='white', foreground="black")
+    # loginBtn1.pack(side="top", pady=55)
+
+
 
 def Zodiac_Sign():#'오늘의 운세'버튼 클릭 시 실행되는 함수
     reset() #창 초기화
@@ -203,7 +242,7 @@ def Zodiac_Sign():#'오늘의 운세'버튼 클릭 시 실행되는 함수
     menu3Phrase = Label(root,text=userZodiacPhrase, font=("함초롱바탕",20), wraplength=600) #wraplength=int(),숫자만큼 줄이 차면 줄바꿈한다.
     menu3Phrase.pack(side="top", pady=30)
     recallBtn = Button(root)
-    recallBtn.config(text="확인", font=("함초롬바탕",15), background='white', command=menuPage_recall)
+    recallBtn.config(text="확인", font=("함초롬바탕",15), background='white', foreground="black", command=menuPage_recall)
     recallBtn.place(x=415, y=380)
 
 #TODO 디자인요소(폰트,글자크기,글자(배경)색 등등) 업그레이드.
@@ -221,12 +260,16 @@ def num6():#종료
 def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
     reset()
     menuTitle = Label(root)  # 메뉴 타이틀
-    menuTitle.config(text="Index", background="white")
-    menuTitle.config(font=("Times", 15))
-    menuTitle.pack(side="top", pady=20)
+    menuTitle.config(text="메인 메뉴", background="white", foreground="black")
+    menuTitle.config(font=("함초롱 바탕", 25))
+    menuTitle.place(x=325, y=20)
 
-    frameBox = Frame(root, relief='solid', bd=1, width=300, height=350) #단순 프레임(도형)이다.
-    frameBox.pack()
+    # greetings = Label(root)
+    # greetings.config(text="%s" %Motivation_Message.motivationMessage, font=("함초롱바탕, 10"), background="white", foreground="black")
+    # greetings.place(x=250, y=50)
+    messagebox.showinfo("아침 인사", "%s" %Motivation_Message.motivationMessage)
+    # frameBox = Frame(root, relief='solid', bd=1, width=300, height=350) #단순 프레임(도형)이다.
+    # frameBox.place(x=282, y=100)
 
     menu1 = Button(root, text="루틴 실행", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num1)
     menu2 = Button(root, text="루틴 수정", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num2)

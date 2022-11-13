@@ -49,4 +49,3 @@ def Motivation_Message(): #내장된 동기부여 메시지를 랜덤으로 retu
     return motivationMessage
 
 motivationMessage = Motivation_Message()
-print(motivationMessage)
