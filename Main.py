@@ -295,8 +295,6 @@ def num4():#'명상의 시간' 버튼 클릭 시 시행되는 함수
 def num5():#'사용시 주의사항' 버튼 클릭 시 시행되는 함수
     pass
 
-def num6():#종료
-    pass
 
 
 def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
@@ -317,7 +315,7 @@ def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
     menu3 = Button(root, text="오늘의 영단어", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=Eng_words)
     menu4 = Button(root, text="명상의 시간", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num4)
     menu5 = Button(root, text="사용시 주의사항", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num5)
-    menu6 = Button(root, text="종료", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=num6)
+    menu6 = Button(root, text="종료", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=root.destroy)
 
     menu1.place(x=282, y=130)
     menu2.place(x=282, y=180)
