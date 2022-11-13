@@ -46,12 +46,13 @@ userNameEnt.place(x=335, y=283)
 
 #생년월일 라벨
 birthYear = Label(root)
-birthYear.config(text="생년월일(8자리):", font=("함초롬바탕", 15), background='white')
+birthYear.config(text="생년월일(8자리):", font=("함초롬바탕", 15), background='white', foreground="black")
 birthYear.place(x=185, y=330)
 #생년월일 입력창
 birthYearEnt = Entry(root, textvariable=birthYearInput)
 birthYearEnt.insert(0, "00000000") #디폴트 값
-birthYearEnt.config(font=("함초롬바탕", 15), background='white')
+birthYearEnt.config(font=("함초롬바탕", 15), background='white', foreground="black")
+
 def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 삭제시키는 함수
     if birthYearEnt.get() == "00000000":  # 초기값만 지울 수 있도록 한다
         birthYearEnt.delete(0, len(birthYearEnt.get()))
@@ -110,7 +111,7 @@ def zodiac():#사용자의 생년월일 값을 바탕으로,'오늘의 운세'�
 routineStr = "" #루틴 한 줄로 표현
 routineList = [] #루틴 리스트
 timeList = [] #목표시간 리스트
-f = open("강민수.txt", mode='r')
+f = open("강민수.txt", mode='r', encoding='utf-8')
 lines = f.readlines()
 for line in lines:
     line = line.strip()
@@ -161,8 +162,6 @@ def num1(): #'루틴 실행' 버튼 클릭 시 실행, 대기화면을 출력한
                 routionLab.config(text=routineList[i], background="white")
                 routionLab.config(font=("Times", 50))
                 routionLab.pack(anchor="w",pady=30)
-
-
 
                 nextRoutineButton = Button(root)
                 nextRoutineButton.config(text="다음", command=lambda:RoutineRecursion(i+1), font=("함초롬바탕", 15),
