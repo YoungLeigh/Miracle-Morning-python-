@@ -285,7 +285,7 @@ def Eng_words():#'오늘의 영단어'버튼 클릭 시 실행되는 함수
     menu3Phrase.pack(side="top", pady=30)
     recallBtn = Button(root)
     recallBtn.config(text="확인", font=("함초롬바탕",15), background='white', foreground="black", command=menuPage_recall)
-    recallBtn.place(x=415, y=380)
+    recallBtn.place(x=390, y=380)
 
 #TODO 디자인요소(폰트,글자크기,글자(배경)색 등등) 업그레이드.
 
@@ -293,9 +293,19 @@ def num4():#'명상의 시간' 버튼 클릭 시 시행되는 함수
     pass
 
 def num5():#'사용시 주의사항' 버튼 클릭 시 시행되는 함수
-    pass
-
-
+    reset()
+    Title = Label(root)
+    Title.config(text="사용시 주의사항", background="white", foreground="black")
+    Title.config(font=("함초롱바탕", 28))
+    Title.pack(side="top", pady=20)
+    text = Label(root)  # 루틴명만 모두 출력
+    text.config(text="1. 루틴 실행시 뜨는 에러: 루틴 실행을 마치면 _tkinter.TclError: invalid command name 이라는 에러가 발생합니다. 해당 에러는 재귀함수를 강제 종료하며 발생하는 오류로 프로그램 실행에는 지장이 없으니 무시해도 됩니다."
+                     "\n\n2. 루틴 수정 이후 적용이 안될 때: 루틴 수정을 마치면 프로그램을 종료하고 재실행해야 루틴 실행에서 수정한 내용이 적용됩니다."
+                     "\n\n3. 루틴 수정 시 규칙: 루틴 수정시 무조건 >>>루틴 내용 = 00(분):00(초)<<<의 구조로 저장하셔야 합니다.", font=("함초롬바탕", 12), background="white", foreground="black",wraplength=600)
+    text.pack(side="top", pady=30)
+    recallBtn = Button(root)
+    recallBtn.config(text="확인", font=("함초롬바탕",15), background='white', foreground="black", command=menuPage_recall)
+    recallBtn.place(x=390, y=380)
 
 def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
     reset()
