@@ -232,7 +232,7 @@ def num1(): #'루틴 실행' 버튼 클릭 시 실행, 대기화면을 출력한
     routinePrintSubTitle.pack(side="top", pady=30)
 
     routineIntroduction = Label(root)  # 루틴명만 모두 출력
-    routineIntroduction.config(text=routineStr, font=("함초롬바탕", 15), background="white", foreground="black")
+    routineIntroduction.config(text=routineStr, font=("함초롬바탕", 15), background="white", foreground="black",wraplength=600)
     routineIntroduction.pack(side="top", pady=30)
 
     RoutineStartButton = Button(root)
