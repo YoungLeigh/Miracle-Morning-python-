@@ -1,11 +1,11 @@
 import time
 import os.path
 import tkinter
-
 import Motivation_Message
 from datetime import datetime
 from tkinter import *
 from tkinter import messagebox
+import English_Words
 
 #
 today_date = datetime.today().strftime("%Y/%m/%d") ## YYYY/mm/dd 형태의 날짜 출력
@@ -115,32 +115,26 @@ def reset():#창 초기화 함수,pack과 place로 추가된 GUI 항목을 모�
     for i in my_list:
         i.destroy()
 
-def zodiac():#사용자의 생년월일 값을 바탕으로,'오늘의 운세'와 '띠' 2개의 값을 반환하는 함수이다.
-    global birthYearInput
-    import requests
-    from bs4 import BeautifulSoup
-    # <p class="text _cs_fortune_text">
-    zodiacSiteList = ["https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EC%9B%90%EC%88%AD%EC%9D%B4%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EB%8B%AD%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EA%B0%9C%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EB%8F%BC%EC%A7%80%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EC%A5%90%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EC%86%8C%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%ED%98%B8%EB%9E%91%EC%9D%B4%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%ED%86%A0%EB%81%BC%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EC%9A%A9%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EB%B1%80%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EB%A7%90%EB%9D%A0%20%EC%9A%B4%EC%84%B8",
-        "https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=%EC%96%91%EB%9D%A0%20%EC%9A%B4%EC%84%B8"]
-    zodiacBirth = int(birthYearInput.get()[:4]) % 12
-    url = zodiacSiteList[zodiacBirth]
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, "html.parser")  # beautifulsoup은 정리하는 도구, req.text는 재료, html.parser는 정리 방식
-    txt = soup.find("p", attrs={"class", "text _cs_fortune_text"}).get_text()  # p 태그이면서 특정 속성, 속성값을 가진 p를 찾는다. get_text는 글자들만 뽑아준다
-
-    zodiacList = ['원숭이', '닭', '개', '돼지', '쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양']
-    userZodiac = zodiacList[zodiacBirth]
-    return txt, userZodiac
+def eng_dic():#오늘의 영단어를 보여주는 함수
+    from PyDictionary import PyDictionary
+    import random
+    global word
+    words = ['abort', 'absurd', 'accord', 'accumulate', 'bankrupt', 'blast', 'breed', 'brew', 'caption', 'cater',
+             'cathedral', 'chamber', 'chronic', 'commence', 'deficiency', 'deficit', 'degradedelegate', 'deliberate',
+             'explicit', 'extract', 'extraordinary', 'facilitate', 'faculty', 'fatal', 'federal', 'fertile', 'guardian',
+             'gulf', 'habitat', 'halt', 'haunt', 'headquarters', 'intervene', 'intrigue', 'judicial', 'keen', 'knot',
+             'lease', 'legislate', 'sweep', 'swell', 'swift', 'tease', 'telegraph', 'temporary', 'tempt', 'tenant',
+             'yield']
+    word = random.choice(words)
+    dict = PyDictionary()
+    meaning = dict.meaning("%s" % word)
+    try:
+        return ("명사: " + meaning["Noun"][0], "\n동사: " + meaning["Verb"][0]), word
+    except:
+        try:
+            return ("명사: " + meaning["Noun"][0]), word
+        except:
+            return ("동사: " + meaning["Verb"][0]), word
 
 
 
@@ -280,12 +274,12 @@ def get_text(): #유저가 수정한 텍스트를 텍스트파일에 다시 저�
 
 
 
-def Zodiac_Sign():#'오늘의 운세'버튼 클릭 시 실행되는 함수
+def Eng_words():#'오늘의 영단어'버튼 클릭 시 실행되는 함수
     reset() #창 초기화
-    userZodiacPhrase, userZodiac = zodiac()
-    menu3Title = Label(root,text="오늘의 운세", font=("Times", 40))
+    userZodiacPhrase, userZodiac = eng_dic()
+    menu3Title = Label(root,text=f"오늘의 영단어: {word}", font=("Times", 40))
     menu3Title.pack(side="top", pady=20)
-    menu3SubTitle = Label(root,text=f"{today_date}, {userZodiac}띠의 운세는", font=("Times", 15))
+    menu3SubTitle = Label(root,text="영단어는 영어 뜻으로 외웠을 때 더 효과적이라고 한다. 오늘의 영단어를 외워보자.", font=("Times", 15))
     menu3SubTitle.pack(side="top", pady=20)
     menu3Phrase = Label(root,text=userZodiacPhrase, font=("함초롱바탕",20), wraplength=600) #wraplength=int(),숫자만큼 줄이 차면 줄바꿈한다.
     menu3Phrase.pack(side="top", pady=30)
@@ -298,7 +292,7 @@ def Zodiac_Sign():#'오늘의 운세'버튼 클릭 시 실행되는 함수
 def num4():#'명상의 시간' 버튼 클릭 시 시행되는 함수
     pass
 
-def num5():#'일정 점검' 버튼 클릭 시 시행되는 함수
+def num5():#'사용시 주의사항' 버튼 클릭 시 시행되는 함수
     pass
 
 def num6():#종료
@@ -312,27 +306,25 @@ def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
     menuTitle.config(font=("함초롱 바탕", 25))
     menuTitle.place(x=325, y=20)
 
-    # greetings = Label(root)
-    # greetings.config(text="%s" %Motivation_Message.motivationMessage, font=("함초롱바탕, 10"), background="white", foreground="black")
-    # greetings.place(x=250, y=50)
-    messagebox.showinfo("아침 인사", "%s" %Motivation_Message.motivationMessage)
+    greetings = Label(root)
+    greetings.config(text="%s" %Motivation_Message.motivationMessage, font=("함초롱바탕, 10"), background="white", foreground="black", wraplength=400)
+    greetings.place(x=200, y=75)
     # frameBox = Frame(root, relief='solid', bd=1, width=300, height=350) #단순 프레임(도형)이다.
     # frameBox.place(x=282, y=100)
 
     menu1 = Button(root, text="루틴 실행", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num1)
     menu2 = Button(root, text="루틴 수정", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num2)
-    menu3 = Button(root, text="오늘의 운세", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=Zodiac_Sign)
+    menu3 = Button(root, text="오늘의 영단어", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=Eng_words)
     menu4 = Button(root, text="명상의 시간", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num4)
-    menu5 = Button(root, text="일정 점검", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num5)
-    menu6 = Button(root, text="종료", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num6)
+    menu5 = Button(root, text="사용시 주의사항", background="grey", font=("함초롱바탕,15"), width=25, height=1,command=num5)
+    menu6 = Button(root, text="종료", background="grey", font=("함초롱바탕,15"), width=25, height=1, command=num6)
 
-    menu1.place(x=282, y=100)
-    menu2.place(x=282, y=150)
-    menu3.place(x=282, y=200)
-    menu4.place(x=282, y=250)
-    menu5.place(x=282, y=300)
-    menu6.place(x=282, y=350)
-
+    menu1.place(x=282, y=130)
+    menu2.place(x=282, y=180)
+    menu3.place(x=282, y=230)
+    menu4.place(x=282, y=280)
+    menu5.place(x=282, y=330)
+    menu6.place(x=282, y=380)
 
 root.configure(background='white') #배경 색깔
 root.mainloop() #Tkinter 실행
