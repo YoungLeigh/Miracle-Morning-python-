@@ -15,16 +15,16 @@ today_date = datetime.today().strftime("%Y/%m/%d") ## YYYY/mm/dd 형태의 날�
 root = Tk()
 root.title("Miracle Morning")
 root.geometry("850x500") #창 화면크기
-root.resizable(False, False)
+root.resizable(False, False) #창 화면 조정 금지
 
 
 mainTitle = Label(root) #메인 타이틀
-mainTitle.config(text="Miracle Morning", background="white")
+mainTitle.config(text="Miracle Morning", background="white", foreground="black")
 mainTitle.config(font=("Times", 50))
 mainTitle.pack(side="top", pady=30)
 
 subTitle = Label(root) #부제목
-subTitle.config(text="당신의 아침을 책임져줄 모닝루틴 프로그램", background="white")
+subTitle.config(text="당신의 아침을 책임져줄 모닝루틴 프로그램", background="white", foreground="black")
 subTitle.config(font=("함초롬바탕", 15))
 subTitle.place(x=240, y=120)
 
@@ -32,12 +32,12 @@ userNameInput, birthYearInput = StringVar(), StringVar() #사용자 입력값을
 
 #이름 라벨
 userNameLab = Label(root)
-userNameLab.config(text="이름:", font=("함초롬바탕", 15), background='white')
+userNameLab.config(text="이름:", font=("함초롬바탕", 15), background='white', foreground="black")
 userNameLab.place(x=285, y=280)
 #이름 입력창
 userNameEnt = Entry(root, textvariable=userNameInput)
 userNameEnt.insert(0, "홍길동") #디폴트 값
-userNameEnt.config(font=("함초롬바탕", 15), background='white')
+userNameEnt.config(font=("함초롬바탕", 15), background='white', foreground="black")
 def clear(event):#좌클릭을 했을때 입력창에 있는 내용 모두를 삭제시키는 함수
     if userNameEnt.get() == "홍길동":  # 초기값만 지울 수 있도록 한다
         userNameEnt.delete(0, len(userNameEnt.get()))
