@@ -6,7 +6,8 @@ import pygame
 from datetime import datetime
 from tkinter import *
 from tkinter import messagebox
-
+from PyDictionary import PyDictionary
+import random
 #
 today_date = datetime.today().strftime("%Y/%m/%d") ## YYYY/mm/dd 형태의 날짜 출력
 # currentTime = time.localtime(time.time())
@@ -118,8 +119,6 @@ def reset():#창 초기화 함수,pack과 place로 추가된 GUI 항목을 모�
         i.destroy()
 
 def eng_dic():#오늘의 영단어를 보여주는 함수
-    from PyDictionary import PyDictionary
-    import random
     global word
     words = ['abort', 'absurd', 'accord', 'accumulate', 'bankrupt', 'blast', 'breed', 'brew', 'caption', 'cater',
              'cathedral', 'chamber', 'chronic', 'commence', 'deficiency', 'deficit', 'degradedelegate', 'deliberate',
@@ -359,16 +358,16 @@ def menuPage_recall():#창 초기화 후, 메뉴 페이지를 호출한다.
 
     greetings = Label(root)
     greetings.config(text="%s" %Motivation_Message.motivationMessage, font=("함초롬바탕, 10"), background="white", foreground="black", wraplength=400)
-    greetings.place(x=225, y=75)
+    greetings.place(x=233, y=75)
     # frameBox = Frame(root, relief='solid', bd=1, width=300, height=350) #단순 프레임(도형)이다.
     # frameBox.place(x=282, y=100)
 
-    menu1 = Button(root, text="루틴 실행", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num1)
-    menu2 = Button(root, text="루틴 수정", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num2)
-    menu3 = Button(root, text="오늘의 영단어", background="grey", font=("함초롬바탕,15"), width=25, height=1, command=Eng_words)
-    menu4 = Button(root, text="명상의 시간", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num4)
-    menu5 = Button(root, text="사용시 주의사항", background="grey", font=("함초롬바탕,15"), width=25, height=1,command=num5)
-    menu6 = Button(root, text="종료", background="grey", font=("함초롬바탕,15"), width=25, height=1, command=root.destroy)
+    menu1 = Button(root, text="루틴 실행", background="grey", foreground="black", font=("함초롬바탕,15"), width=25, height=1,command=num1)
+    menu2 = Button(root, text="루틴 수정", background="grey",foreground="black", font=("함초롬바탕,15"), width=25, height=1,command=num2)
+    menu3 = Button(root, text="오늘의 영단어", background="grey",foreground="black" ,font=("함초롬바탕,15"), width=25, height=1, command=Eng_words)
+    menu4 = Button(root, text="명상의 시간", background="grey",foreground="black", font=("함초롬바탕,15"), width=25, height=1,command=num4)
+    menu5 = Button(root, text="사용시 주의사항", background="grey",foreground="black", font=("함초롬바탕,15"), width=25, height=1,command=num5)
+    menu6 = Button(root, text="종료", background="grey", foreground="black", font=("함초롬바탕,15"), width=25, height=1, command=root.destroy)
 
     menu1.place(x=302, y=130)
     menu2.place(x=302, y=180)
