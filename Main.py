@@ -131,7 +131,6 @@ def eng_dic():  # 오늘의 영단어를 보여주는 함수
              'lease', 'legislate', 'sweep', 'swell', 'swift', 'tease', 'telegraph', 'thaw', 'tempt', 'tenant',
              'yield']
     word = random.choice(words)
-    print(word)
     dict = PyDictionary()
     meaning = dict.meaning("%s" % word)
     try:
